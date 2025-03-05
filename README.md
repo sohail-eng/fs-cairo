@@ -1,8 +1,8 @@
-# Donuts
+### Donuts
 
-## Description
+#### Description
 
-### Features:
+#### Features:
 
 1. **Restaurant Page**:
     - 
@@ -10,23 +10,24 @@
 2. **Menu Page**:
     - 
 
-## Organization
+#### Organization
 
 - **Backend**: 
   - Database models (Prisma Postgre):
-    - **Restaurant**: Contains information about the restaurant.
-    - **Category**: Contains the categories for products.
-    - **Product**: Information about menu products.
-    - **Order**: Details about customer orders.
-    - **OrderProduct**: Relates products to the orders made.
-    enum orderstatus e ordertype (dine in )
+    - **Restaurant**: Restaurant's Info;
+    - **Category**: The products are in diferrent Categories;
+    - **Product**: Individual menu items;
+    - **Order**: Stores order Details;
+    - **OrderProduct**: Links products to orders;
+    - Enums:
+      - **OrderStatus**: Pending, Preparing, Ready, Payment Confirmed or Failed;
+      - **OrderType**: DineIn or Takeaway.
 
 - **Frontend**:
-  - **Next.js** is used for dynamic page rendering.
-  - Components such as **Image** for displaying dynamic images and **OrderTypeOption** for navigating between order types (DineIn and Takeaway).
+  - **Next.js**
 
-## How to Run
+#### How to Run
 
-### Prerequisites
+#### Prerequisites
 
-### Steps
+#### Steps
