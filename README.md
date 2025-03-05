@@ -13,13 +13,13 @@
 ## Organization
 
 - **Backend**: 
-  - Uses Prisma ORM to integrate with the PostgreSQL database.
-  - Database models:
+  - Database models (Prisma Postgre):
     - **Restaurant**: Contains information about the restaurant.
     - **Category**: Contains the categories for products.
     - **Product**: Information about menu products.
     - **Order**: Details about customer orders.
     - **OrderProduct**: Relates products to the orders made.
+    enum orderstatus e ordertype (dine in )
 
 - **Frontend**:
   - **Next.js** is used for dynamic page rendering.
