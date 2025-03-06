@@ -36,10 +36,16 @@ const CartSheet = () => {
               </div>
             </CardContent>
           </Card>
+          
           <Button className="w-full rounded-full" onClick={() => setFinishOrderDialogIsOpen(true)}
           >
-            Checkout
+            Proceed
           </Button>
+          <Button variant="outline" className="w-full rounded-full" onClick={toggleCart}
+          >
+            Continue Ordering
+          </Button>
+
           <FinishOrderDialog open={finishOrderDialogIsOpen} onOpenChange={setFinishOrderDialogIsOpen}/>
         </div>
       </SheetContent>

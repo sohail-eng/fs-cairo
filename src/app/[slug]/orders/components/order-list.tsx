@@ -59,7 +59,7 @@ const OrderList = ({ orders }: OrderListProps) => {
       </Button>
       <div className="flex items-center gap-3">
         <ScrollTextIcon />
-        <h2 className="text-lg font-semibold">My Orders</h2>
+        <h2 className="text-lg font-semibold">My Order</h2>
       </div>
       {orders.map((order) => (
         <Card key={order.id}>

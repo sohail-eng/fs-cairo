@@ -1,33 +1,30 @@
-### Donuts
-
+###### Donuts
 #### Description
 
-#### Features:
-
-1. **Restaurant Page**:
-    - 
-
-2. **Menu Page**:
-    - 
-
-#### Organization
+#### Structure
 
 - **Backend**: 
-  - Database models (Prisma Postgre):
+  - Database (Prisma PostgreSQL):
     - **Restaurant**: Restaurant's Info;
     - **Category**: The products are in diferrent Categories;
     - **Product**: Individual menu items;
     - **Order**: Stores order Details;
     - **OrderProduct**: Links products to orders;
     - Enums:
-      - **OrderStatus**: Pending, Preparing, Ready, Payment Confirmed or Failed;
-      - **OrderType**: DineIn or Takeaway.
+      - **OrderStatus**: Tracks the order's status;
+      - **OrderType**: Dine-in or Takeaway.
 
 - **Frontend**:
   - **Next.js**
 
-#### How to Run
+#### Flow:
 
-#### Prerequisites
-
-#### Steps
+0. **Initial Page**
+1. **Restaurant Page**:
+    - Displays restaurant information and User selects an Order Type (Dine-In or Takeaway)
+2. **Menu Page**
+2.5. **Cart**:
+    - Context between pages
+3. **Product Page**:
+    - Product info
+4. **Payment**
