@@ -9,9 +9,8 @@
   - **Product**: Individual menu items;
   - **Order**: Stores order Details;
   - **OrderProduct**: Links products to orders;
-  - Enums:
-    - **OrderStatus**: Tracks the order's status;
-    - **OrderType**: Dine-in or Takeaway.
+  - ( Enum ) **OrderStatus**: Tracks the order's status;
+  - ( Enum ) **OrderType**: Dine-in or Takeaway.
 
 - **Frontend**:
   - **Next.js**
