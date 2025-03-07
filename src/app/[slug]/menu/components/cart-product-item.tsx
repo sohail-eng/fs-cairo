@@ -19,7 +19,7 @@ const CartProductItem = ({ product }: CartItemProps) => {
         </div>
 
         <div className="space-y-1 min-w-0">
-          <p className="text-xs truncate">{product.name}</p>
+          <p className="max-w-[80%] truncate text-ellipsis text-xs">{product.name}</p>
           <p className="text-sm font-semibold">{formatCurrency(product.price)}</p>
 
           <div className="flex items-center gap-1 text-center">
