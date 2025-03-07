@@ -14,7 +14,7 @@ const CartProductItem = ({ product }: CartItemProps) => {
   return (
     <div className="flex items-center justify-between min-w-0">
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="relative h-20 w-20 rounded-xl bg-gray-100 flex-shrink-0">
+        <div className="relative h-20 w-20 rounded-xl flex-shrink-0">
           <Image src={product.imageUrl} alt={product.name} fill />
         </div>
 
