@@ -3,16 +3,15 @@
 
 #### Structure
 
-- **Backend**: 
-  - Database (Prisma PostgreSQL):
-    - **Restaurant**: Restaurant's Info;
-    - **Category**: The products are in diferrent Categories;
-    - **Product**: Individual menu items;
-    - **Order**: Stores order Details;
-    - **OrderProduct**: Links products to orders;
-    - Enums:
-      - **OrderStatus**: Tracks the order's status;
-      - **OrderType**: Dine-in or Takeaway.
+- **Backend** (Database (Prisma PostgreSQL)):
+  - **Restaurant**: Restaurant's Info;
+  - **Category**: The products are in diferrent Categories;
+  - **Product**: Individual menu items;
+  - **Order**: Stores order Details;
+  - **OrderProduct**: Links products to orders;
+  - Enums:
+    - **OrderStatus**: Tracks the order's status;
+    - **OrderType**: Dine-in or Takeaway.
 
 - **Frontend**:
   - **Next.js**
