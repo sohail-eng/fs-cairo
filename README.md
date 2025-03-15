@@ -1,33 +1,30 @@
-###### Donuts
-#### Description
+###### donuts — mobile ordering system
 
-#### Structure
+#### structure
 
-- **Backend** (Database (Prisma PostgreSQL)):
-  - **Restaurant**: Restaurant's Info;
-  - **Category**: The products are in diferrent Categories;
-  - **Product**: Individual menu items;
-  - **Order**: Stores order Details;
-  - **OrderProduct**: Links products to orders;
-  - ( Enum ) **OrderStatus**: Tracks the order's status;
-  - ( Enum ) **OrderType**: Dine-in or Takeaway.
+- next.js (react-based)  
+- tailwindcss, radix-ui components  
+- react-hook-form, zod  
+- prisma (postgresql)  
+- stripe  
 
-- **Frontend**:
-  - **Next.js**
+#### flow
 
-#### Flow:
+0. initial page
 
-0. **Initial Page**
+1. main page:
+    - displays main info and user selects an order type (dine-in or takeaway)
 
-1. **Restaurant Page**:
-    - Displays restaurant information and User selects an Order Type (Dine-In or Takeaway)
-    
-2. **Menu Page**
+2. menu page
 
-2.5. **Cart**:
-    - Context between pages
+3. cart:
+    - context between pages
 
-3. **Product Page**:
-    - Product info
+4. product page:
+    - product info
 
-4. **Payment**
+5. payment
+
+#### how to run
+
+#### outro
