@@ -1,30 +1,38 @@
-###### donuts — mobile ordering system
+### ordering system
 
-#### structure
+a minimal, modern food ordering system.  
+built with next.js, tailwindcss, radix-ui, prisma, stripe & more.
 
-- next.js (react-based)  
-- tailwindcss, radix-ui components  
-- react-hook-form, zod  
-- prisma (postgresql)  
-- stripe  
+---
 
-#### flow
+### stack
 
-0. initial page
+- next.js (app router, server actions)  
+- tailwindcss (utility-first styling)  
+- radix-ui (accessible ui primitives)  
+- react-hook-form + zod (forms & validation)  
+- prisma (orm for postgresql)  
+- stripe (payments)  
+- typescript  
 
-1. main page:
-    - displays main info and user selects an order type (dine-in or takeaway)
+---
 
-2. menu page
+### features
 
-3. cart:
-    - context between pages
+- select restaurant & order type (dine-in / takeaway)  
+- browse categorized menu  
+- add to cart (context-based)  
+- view & edit cart  
+- stripe checkout  
+- order tracking via cpf  
+- responsive, mobile-first ui  
 
-4. product page:
-    - product info
+---
 
-5. payment
+### env
 
-#### how to run
-
-#### outro
+```env
+DATABASE_URL=postgresql://...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET_KEY=whsec_...
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_...

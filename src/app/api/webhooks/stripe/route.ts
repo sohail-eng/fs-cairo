@@ -40,7 +40,7 @@ export async function POST(request: Request) {
         restaurant: {
           select: {
             slug: true,
-    }, }, }, });
+    }, }, }, }); 
     
     revalidatePath(`/${order.restaurant.slug}/orders`);
   } else if (event.type === "charge.failed") {
