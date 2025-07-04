@@ -1,11 +1,7 @@
 "use server";
 
+import { createOrderService } from "@/services/order.service";
 import { OrderType } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-
-import { db } from "@/lib/prisma";
-
-import { removeCpfPunctuation } from "../helpers/cpf";
 
 interface CreateOrderInput {
   customerName: string;
@@ -19,43 +15,5 @@ interface CreateOrderInput {
 }
 
 export const createOrder = async (input: CreateOrderInput) => {
-  const restaurant = await db.restaurant.findUnique({
-    where: {
-      slug: input.slug,
-  }, });
-  if (!restaurant) {
-    throw new Error("Restaurant not found");
-  }
-  const productsWithPrices = await db.product.findMany({
-    where: {
-      id: {
-        in: input.products.map((product) => product.id),
-  }, }, });
-  
-  const productsWithPricesAndQuantities = input.products.map((product) => ({
-    productId: product.id,
-    quantity: product.quantity,
-    price: productsWithPrices.find((p) => p.id === product.id)!.price,
-  }));
-  
-  const order = await db.order.create({
-    data: {
-      status: "PENDING",
-      customerName: input.customerName,
-      customerCpf: removeCpfPunctuation(input.customerCpf),
-      orderProducts: {
-        createMany: {
-          data: productsWithPricesAndQuantities,
-        },
-      },
-      total: productsWithPricesAndQuantities.reduce(
-        (acc, product) => acc + product.price * product.quantity,
-        0,
-      ),
-      orderType: input.orderType,
-      restaurantId: restaurant.id,
-  }, });
-  
-  revalidatePath(`/${input.slug}/orders`);
-  return order;
+  return await createOrderService(input);
 };

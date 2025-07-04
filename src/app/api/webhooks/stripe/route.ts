@@ -1,8 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-
-import { db } from "@/lib/prisma";
+import * as OrderRepository from "@/repositories/order.repository";
 
 export async function POST(request: Request) {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -29,19 +28,9 @@ export async function POST(request: Request) {
       return NextResponse.json({
         received: true,
     }); }
-    const order = await db.order.update({
-      where: {
-        id: Number(orderId),
-      },
-      data: {
-        status: "PAYMENT_CONFIRMED",
-      },
-      include: {
-        restaurant: {
-          select: {
-            slug: true,
-    }, }, }, }); 
     
+    const order = await OrderRepository.updateOrderStatus(Number(orderId), "PAYMENT_CONFIRMED");
+
     revalidatePath(`/${order.restaurant.slug}/orders`);
   } else if (event.type === "charge.failed") {
     const orderId = event.data.object.metadata?.orderId;
@@ -49,18 +38,8 @@ export async function POST(request: Request) {
       return NextResponse.json({
         received: true,
     }); }
-    const order = await db.order.update({
-      where: {
-        id: Number(orderId),
-      },
-      data: {
-        status: "PAYMENT_FAILED",
-      },
-      include: {
-        restaurant: {
-          select: {
-            slug: true,
-    }, }, }, });
+    
+    const order = await OrderRepository.updateOrderStatus(Number(orderId), "PAYMENT_FAILED");
     
     revalidatePath(`/${order.restaurant.slug}/orders`);
   }
