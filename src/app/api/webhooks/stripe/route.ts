@@ -30,23 +30,16 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(text, signature, webhookSecret);
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    console.log(`❌ Error message: ${errorMessage}`);
+    console.log(`Error message: ${errorMessage}`);
     return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 400 });
   }
 
   try {
-    await paymentService.handleWebhook(event);
+    const { order } = await paymentService.handleWebhook(event);
 
-    if (event.type === "checkout.session.completed") {
-      const orderId = event.data.object.metadata?.orderId;
-      if (orderId) {
-        // p revalidar o path, precisamos do slug do restaurante.
-        // pode ser melhorada, talvez o service de webhook devesse retornar o slug para a revalidação.
-        // por ora, a lógica de revalidação pode ser mais genérica
-        // ou o handleWebhook poderia retornar o slug do restaurante.
-        // Ex: const { slug } = await paymentService.handle...
-        // await revalidatePath(`/${slug}/orders`);
-    } }
+    if (order) {
+      revalidatePath(`/${order.restaurant.slug}/orders`);
+    }
   } catch (error) {
     console.error("Error handling webhook:", error);
     return new NextResponse("Webhook handler failed. See logs.", {

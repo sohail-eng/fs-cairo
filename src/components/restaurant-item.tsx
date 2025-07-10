@@ -18,6 +18,7 @@ const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
               alt={restaurant.name}
               fill
               className="rounded-t-lg object-cover"
+              priority
             />
           </div>
           <div className="p-3">
@@ -26,7 +27,6 @@ const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
         </CardContent>
       </Card>
     </Link>
-  );
-};
+); };
 
 export default RestaurantItem;

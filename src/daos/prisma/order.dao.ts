@@ -6,13 +6,12 @@ export class OrderDAO implements IOrderDAO {
   async create(data: Prisma.OrderCreateInput): Promise<Order> {
     return db.order.create({
       data,
-    });
-  }
+  }); }
 
   async updateStatus(
     orderId: number,
-    status: "PAYMENT_CONFIRMED" | "PAYMENT_FAILED"
-  ): Promise<Order> {
+    status: "PAYMENT_CONFIRMED" | "PAYMENT_FAILED",
+  ): Promise<Order & { restaurant: { slug: string } }> {
     return await db.order.update({
       where: {
         id: orderId,

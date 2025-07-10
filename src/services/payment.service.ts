@@ -5,6 +5,7 @@ import { IOrderDAO } from "@/daos/interfaces/i-order.dao";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { removeCpfPunctuation } from "@/app/[slug]/menu/helpers/cpf";
+import { Order } from "@prisma/client";
 
 export class PaymentService implements IPaymentService {
   private stripe: Stripe;
@@ -16,13 +17,20 @@ export class PaymentService implements IPaymentService {
     }
     this.stripe = new Stripe(stripeSecretKey, {
       apiVersion: "2025-06-30.basil",
-  }); }
+    });
+  }
 
-  async createStripeCheckout({ orderId, products, slug, orderType, cpf }: StripeCheckoutDTO): Promise<{ sessionId: string; }> {
+  async createStripeCheckout({
+    orderId,
+    products,
+    slug,
+    orderType,
+    cpf,
+  }: StripeCheckoutDTO): Promise<{ sessionId: string }> {
     const origin = (await headers()).get("origin") as string;
 
     const productsFromDb = await this.productDAO.findManyByIds(
-      products.map((product) => product.id)
+      products.map((product) => product.id),
     );
 
     const searchParams = new URLSearchParams();
@@ -58,20 +66,30 @@ export class PaymentService implements IPaymentService {
     return { sessionId: session.id };
   }
 
-  async handleWebhook(event: Stripe.Event): Promise<{ received: boolean }> {
+  async handleWebhook(event: Stripe.Event): Promise<{
+    received: boolean;
+    order?: Order & { restaurant: { slug: string } };
+  }> {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const orderId = session.metadata?.orderId;
       if (!orderId) return { received: true };
 
-      await this.orderDAO.updateStatus(Number(orderId), "PAYMENT_CONFIRMED");
+      const order = await this.orderDAO.updateStatus(
+        Number(orderId),
+        "PAYMENT_CONFIRMED",
+      );
+      return { received: true, order };
     } else if (event.type === "charge.failed") {
-
       const charge = event.data.object as Stripe.Charge;
       const orderId = charge.metadata?.orderId;
       if (!orderId) return { received: true };
 
-      await this.orderDAO.updateStatus(Number(orderId), "PAYMENT_FAILED");
+      const order = await this.orderDAO.updateStatus(
+        Number(orderId),
+        "PAYMENT_FAILED",
+      );
+      return { received: true, order };
     }
 
     return { received: true };

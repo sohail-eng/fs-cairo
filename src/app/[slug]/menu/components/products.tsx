@@ -19,7 +19,8 @@ const Products = ({ products }: ProductsProps) => {
         <Link
           key={product.id}
           href={`/${slug}/menu/${product.id}?orderType=${orderType}`}
-          className="flex items-center justify-between gap-10 border-b py-3">
+          className="flex items-center justify-between gap-10 border-b py-3"
+        >
           <div>
             <h3 className="text-sm font-medium">{product.name}</h3>
             <p className="line-clamp-2 text-sm text-muted-foreground">
@@ -35,6 +36,7 @@ const Products = ({ products }: ProductsProps) => {
               alt={product.name}
               fill
               className="rounded-lg object-contain"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         </Link>
