@@ -1,5 +1,4 @@
 import { db } from "@/lib/prisma";
-
 import { isValidCpf, removeCpfPunctuation } from "../menu/helpers/cpf";
 import CpfForm from "./components/cpf-form";
 import OrderList from "./components/order-list";
@@ -10,10 +9,8 @@ interface OrdersPageProps {
 
 const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
   const { cpf } = await searchParams;
-  if (!cpf) {
-    return <CpfForm />;
-  }
-  if (!isValidCpf(cpf)) {
+
+  if (!cpf || !isValidCpf(cpf)) {
     return <CpfForm />;
   }
   
@@ -30,7 +27,6 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
           name: true,
           logoUrl: true,
       }, },
-      
       orderProducts: {
         include: {
           product: true,

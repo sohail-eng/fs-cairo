@@ -15,7 +15,7 @@ const CartProductItem = ({ product }: CartItemProps) => {
     <div className="flex items-center justify-between min-w-0">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <div className="relative h-20 w-20 rounded-xl flex-shrink-0">
-          <Image src={product.imageUrl} alt={product.name} fill />
+          <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
         </div>
 
         <div className="space-y-1 min-w-0">
