@@ -6,9 +6,9 @@ const HomePage = async () => {
 
   return (
     <div className="p-6">
-      <h1 className="mb-2 text-3xl font-bold">Bem-vindo ao Donuts Project!</h1>
+      <h1 className="mb-2 text-3xl font-bold">Welcome!</h1>
       <p className="mb-6 text-muted-foreground">
-        Escolha um restaurante abaixo para começar o seu pedido.
+        Choose a restaurant and start ordering.
       </p>
 
       <div className="flex flex-col gap-6">

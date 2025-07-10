@@ -9,6 +9,7 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { z } from "zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,23 +30,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
-import { createOrder } from "../actions/create-order";
-import { createStripeCheckout } from "../actions/create-stripe-checkout";
+
 import { CartContext } from "../contexts/cart";
 import { isValidCpf } from "../helpers/cpf";
+import {
+  createOrderAction,
+  createStripeCheckoutAction,
+} from "@/app/actions/order.actions";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, {
     message: "Name is required.",
   }),
-  cpf: z.string().trim().min(1, {
-    message: "CPF is required.",
-  })
-  .refine((value) => isValidCpf(value), {
-    message: "Invalid CPF.",
-}), });
+  cpf: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "CPF is required.",
+    })
+    .refine((value) => isValidCpf(value), {
+      message: "Invalid CPF.",
+    }),
+});
 
 type FormSchema = z.infer<typeof formSchema>;
 
@@ -59,6 +66,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   const { products } = useContext(CartContext);
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,38 +77,58 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   });
 
   const onSubmit = async (data: FormSchema) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      const orderType = searchParams.get("orderType",) as OrderType;
+      const orderType = searchParams.get("orderType") as OrderType;
 
-      const order = await createOrder({
-        orderType,
+      const orderResponse = await createOrderAction({
         customerCpf: data.cpf,
         customerName: data.name,
-        products,
+        orderType,
+        products: products.map((p) => ({
+          id: p.id,
+          quantity: p.quantity,
+        })),
         slug,
       });
-      const { sessionId } = await createStripeCheckout({
+
+      if (!orderResponse.success || !orderResponse.order) {
+        toast.error(orderResponse.message || "Failed to create order.");
+        return;
+      }
+
+      const stripeResponse = await createStripeCheckoutAction({
         products,
-        orderId: order.id,
+        orderId: orderResponse.order.id,
         slug,
         orderType,
         cpf: data.cpf,
       });
-      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) return;
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,);
-      stripe?.redirectToCheckout({
-        sessionId: sessionId,
-    });
+
+      if (!stripeResponse.success || !stripeResponse.sessionId) {
+        toast.error(stripeResponse.message || "Failed to create checkout session.");
+        return;
+      }
+
+      const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+      if (!stripePublicKey) {
+        toast.error("Stripe public key is not configured.");
+        return;
+      }
+
+      const stripe = await loadStripe(stripePublicKey);
+      await stripe?.redirectToCheckout({
+        sessionId: stripeResponse.sessionId,
+      });
     } catch (error) {
-      console.error(error);
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
   } };
-  
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerTrigger asChild></DrawerTrigger>
+      <DrawerTrigger asChild>{/* opcional se quiser botão de abrir */}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Complete Order</DrawerTitle>
@@ -108,9 +136,10 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
             Please provide your details to complete the order and proceed to payment.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="p-5">
+
+        <div className="p-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="name"
@@ -124,6 +153,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="cpf"
@@ -142,18 +172,19 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                   </FormItem>
                 )}
               />
-              <DrawerFooter>
+
+              <DrawerFooter className="pt-4">
                 <Button
                   type="submit"
                   variant="destructive"
-                  className="rounded-full"
+                  className="w-full"
                   disabled={isLoading}
                 >
-                  {isLoading && <Loader2Icon className="animate-spin" />}
-                  Continue
+                  {isLoading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+                  Continue to Payment
                 </Button>
                 <DrawerClose asChild>
-                  <Button className="w-full rounded-full" variant="outline">
+                  <Button className="w-full" variant="outline" type="button">
                     Cancel
                   </Button>
                 </DrawerClose>

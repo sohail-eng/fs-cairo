@@ -1,55 +1,60 @@
-import { OrderType } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-import * as OrderRepository from "@/repositories/order.repository";
-import * as RestaurantRepository from "@/repositories/restaurant.repository";
-import * as ProductRepository from "@/repositories/product.repository";
+import { IOrderService } from "./interfaces/i-order.service";
+import { CreateOrderDTO } from "@/@types/order.types";
+import { IOrderDAO } from "@/daos/interfaces/i-order.dao";
+import { IRestaurantDAO } from "@/daos/interfaces/i-restaurant.dao";
+import { IProductDAO } from "@/daos/interfaces/i-product.dao";
+import { Order, Product } from "@prisma/client";
 import { removeCpfPunctuation } from "@/app/[slug]/menu/helpers/cpf";
 
-interface CreateOrderInput {
-  customerName: string;
-  customerCpf: string;
-  products: Array<{
-    id: string;
-    quantity: number;
-  }>;
-  orderType: OrderType;
-  slug: string;
-}
+export class OrderService implements IOrderService {
+  constructor(
+    private orderDAO: IOrderDAO,
+    private restaurantDAO: IRestaurantDAO,
+    private productDAO: IProductDAO
+  ) {}
 
-export const createOrderService = async (input: CreateOrderInput) => {
-  const restaurant = await RestaurantRepository.getRestaurantBySlug(input.slug);
-  if (!restaurant) {
-    throw new Error("Restaurant not found");
-  }
+  async createOrder(dto: CreateOrderDTO): Promise<Order> {
+    const restaurant = await this.restaurantDAO.findUniqueBySlug(dto.slug);
+    if (!restaurant) {
+      throw new Error("Restaurant not found.");
+    }
 
-  const productsWithPrices = await ProductRepository.getProductsByIds(
-    input.products.map((product) => product.id)
-  );
+    const productsFromDb = await this.productDAO.findManyByIds(
+      dto.products.map((p) => p.id)
+    );
 
-  const productsWithPricesAndQuantities = input.products.map((product) => ({
-    productId: product.id,
-    quantity: product.quantity,
-    price: productsWithPrices.find((p) => p.id === product.id)!.price,
-  }));
+    const productsWithQuantities = dto.products.map((productInCart) => {
+      const productFromDb = productsFromDb.find(
+        (p) => p.id === productInCart.id
+      );
+      if (!productFromDb) {
+        throw new Error(`Product with ID ${productInCart.id} not found.`);
+      }
+      return {
+        ...productFromDb,
+        quantity: productInCart.quantity,
+    }; });
 
-  const order = await OrderRepository.createOrder({
-    status: "PENDING",
-    customerName: input.customerName,
-    customerCpf: removeCpfPunctuation(input.customerCpf),
-    orderProducts: {
-      createMany: {
-        data: productsWithPricesAndQuantities,
+    const total = productsWithQuantities.reduce((acc, product) => {
+      return acc + product.price * product.quantity;
+    }, 0);
+
+    const order = await this.orderDAO.create({
+      status: "PENDING",
+      customerName: dto.customerName,
+      customerCpf: removeCpfPunctuation(dto.customerCpf),
+      orderType: dto.orderType,
+      total,
+      restaurant: {
+        connect: { id: restaurant.id },
       },
-    },
-    total: productsWithPricesAndQuantities.reduce(
-      (acc, product) => acc + product.price * product.quantity,
-      0
-    ),
-    orderType: input.orderType,
-    restaurant: {
-        connect: { id: restaurant.id }
-  }, });
+      orderProducts: {
+        createMany: {
+          data: productsWithQuantities.map((product) => ({
+            productId: product.id,
+            quantity: product.quantity,
+            price: product.price,
+    })), }, }, });
 
-  revalidatePath(`/${input.slug}/orders`);
-  return order;
-};
+    return order;
+} }
