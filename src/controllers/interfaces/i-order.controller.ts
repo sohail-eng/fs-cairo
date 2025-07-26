@@ -1,6 +1,6 @@
 import { Order } from "@prisma/client";
-import { CreateOrderDTO } from "@/@types/order.types";
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import { OrderWithDetails } from "@/persistence/daos/interfaces/i-order.dao";
 import Stripe from "stripe";
 

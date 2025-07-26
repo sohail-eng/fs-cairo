@@ -1,4 +1,4 @@
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import Stripe from "stripe";
 
 export interface IPaymentService {

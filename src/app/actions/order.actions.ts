@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { CreateOrderDTO } from "@/@types/order.types";
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import { AppOrderController } from "@/controllers";
 
 const orderController = AppOrderController;

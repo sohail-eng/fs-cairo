@@ -1,5 +1,5 @@
 import { IOrderService } from "./interfaces/i-order.service";
-import { CreateOrderDTO } from "@/@types/order.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
 import { IOrderDAO } from "@/persistence/daos/interfaces/i-order.dao";
 import { IRestaurantDAO } from "@/persistence/daos/interfaces/i-restaurant.dao";
 import { IProductDAO } from "@/persistence/daos/interfaces/i-product.dao";

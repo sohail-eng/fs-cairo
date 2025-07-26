@@ -1,5 +1,5 @@
-import { CreateOrderDTO } from "@/@types/order.types";
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import { OrderDAO } from "@/persistence/daos/prisma/order.dao";
 import { ProductDAO } from "@/persistence/daos/prisma/product.dao";
 import { RestaurantDAO } from "@/persistence/daos/prisma/restaurant.dao";

@@ -1,5 +1,5 @@
-import { CreateOrderDTO } from "@/@types/order.types";
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import { OrderController } from "./order.controller";
 import { IOrderController } from "./interfaces/i-order.controller";
 import Stripe from "stripe";

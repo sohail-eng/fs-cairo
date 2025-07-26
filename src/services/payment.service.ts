@@ -1,5 +1,5 @@
 import { IPaymentService } from "./interfaces/i-payment.service";
-import { StripeCheckoutDTO } from "@/@types/payment.types";
+import { StripeCheckoutDTO } from "@/dtos/payment.dto";
 import { IProductDAO } from "@/persistence/daos/interfaces/i-product.dao";
 import { IOrderDAO } from "@/persistence/daos/interfaces/i-order.dao";
 import Stripe from "stripe";

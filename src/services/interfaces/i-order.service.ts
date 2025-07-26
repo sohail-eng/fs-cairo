@@ -1,4 +1,4 @@
-import { CreateOrderDTO } from "@/@types/order.types";
+import { CreateOrderDTO } from "@/dtos/order.dto";
 import { Order } from "@prisma/client";
 
 export interface IOrderService {
