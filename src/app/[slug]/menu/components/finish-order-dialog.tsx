@@ -128,7 +128,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerTrigger asChild>{/* opcional se quiser botão de abrir */}</DrawerTrigger>
+      <DrawerTrigger asChild>{/* opcional */}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Complete Order</DrawerTitle>

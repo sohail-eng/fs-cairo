@@ -1,7 +1,7 @@
 import { IPaymentService } from "./interfaces/i-payment.service";
 import { StripeCheckoutDTO } from "@/@types/payment.types";
-import { IProductDAO } from "@/daos/interfaces/i-product.dao";
-import { IOrderDAO } from "@/daos/interfaces/i-order.dao";
+import { IProductDAO } from "@/persistence/daos/interfaces/i-product.dao";
+import { IOrderDAO } from "@/persistence/daos/interfaces/i-order.dao";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { removeCpfPunctuation } from "@/app/[slug]/menu/helpers/cpf";

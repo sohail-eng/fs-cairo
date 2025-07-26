@@ -1,16 +1,17 @@
 import { db } from "@/lib/prisma";
 import { Order, OrderStatus, Prisma } from "@prisma/client";
-import { IOrderDAO } from "../interfaces/i-order.dao";
+import { IOrderDAO, OrderWithDetails } from "../interfaces/i-order.dao";
 
 export class OrderDAO implements IOrderDAO {
   async create(data: Prisma.OrderCreateInput): Promise<Order> {
     return db.order.create({
       data,
-  }); }
+    });
+  }
 
   async updateStatus(
     orderId: number,
-    status: "PAYMENT_CONFIRMED" | "PAYMENT_FAILED",
+    status: "PAYMENT_CONFIRMED" | "PAYMENT_FAILED"
   ): Promise<Order & { restaurant: { slug: string } }> {
     return await db.order.update({
       where: {
@@ -25,7 +26,7 @@ export class OrderDAO implements IOrderDAO {
             slug: true,
   }, }, }, }); }
 
-  async findManyByCpf(cpf: string): Promise<Order[]> {
+  async findManyByCpf(cpf: string): Promise<OrderWithDetails[]> {
     return db.order.findMany({
       orderBy: {
         createdAt: "desc",
@@ -39,6 +40,7 @@ export class OrderDAO implements IOrderDAO {
             name: true,
             logoUrl: true,
         }, },
+        
         orderProducts: {
           include: {
             product: true,

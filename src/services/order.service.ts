@@ -1,8 +1,8 @@
 import { IOrderService } from "./interfaces/i-order.service";
 import { CreateOrderDTO } from "@/@types/order.types";
-import { IOrderDAO } from "@/daos/interfaces/i-order.dao";
-import { IRestaurantDAO } from "@/daos/interfaces/i-restaurant.dao";
-import { IProductDAO } from "@/daos/interfaces/i-product.dao";
+import { IOrderDAO } from "@/persistence/daos/interfaces/i-order.dao";
+import { IRestaurantDAO } from "@/persistence/daos/interfaces/i-restaurant.dao";
+import { IProductDAO } from "@/persistence/daos/interfaces/i-product.dao";
 import { Order, Product } from "@prisma/client";
 import { removeCpfPunctuation } from "@/app/[slug]/menu/helpers/cpf";
 

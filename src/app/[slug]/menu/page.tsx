@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { db } from "@/lib/prisma";
 import RestaurantCategories from "./components/categories";
 import RestaurantHeader from "./components/header";
+import { RestaurantController } from "@/controllers/restaurant.controller";
 
 interface RestaurantMenuPageProps {
   params: Promise<{ slug: string }>;
@@ -12,25 +12,25 @@ const isOrderTypeValid = (orderType: string) => {
   return ["DINEIN", "TAKEAWAY"].includes(orderType.toUpperCase());
 };
 
+const restaurantController = new RestaurantController();
+
 const RestaurantMenuPage = async ({
   params,
   searchParams,
 }: RestaurantMenuPageProps) => {
   const { slug } = await params;
   const { orderType } = await searchParams;
+
   if (!isOrderTypeValid(orderType)) {
     return notFound();
   }
-  const restaurant = await db.restaurant.findUnique({
-    where: { slug },
-    include: {
-      categories: {
-        include: { products: true },
-  }, }, });
-  
-  if (!restaurant) {
+
+  const { success, restaurant } = await restaurantController.getRestaurantWithCategories(slug);
+
+  if (!success || !restaurant) {
     return notFound();
   }
+
   return (
     <div>
       <RestaurantHeader restaurant={restaurant} />

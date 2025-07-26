@@ -1,8 +1,10 @@
-import { db } from "@/lib/prisma";
 import RestaurantItem from "@/components/restaurant-item";
+import { RestaurantController } from "@/controllers/restaurant.controller";
+
+const restaurantController = new RestaurantController();
 
 const HomePage = async () => {
-  const restaurants = await db.restaurant.findMany({});
+  const { restaurants } = await restaurantController.getAllRestaurants();
 
   return (
     <div className="p-6">
@@ -17,6 +19,7 @@ const HomePage = async () => {
         ))}
       </div>
     </div>
-); };
+  );
+};
 
 export default HomePage;
